@@ -1,0 +1,415 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.wrap{padding:1.5rem 0;font-family:var(--font-sans)}
+.sec-label{font-size:11px;font-weight:500;color:var(--color-text-tertiary);letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px}
+
+.tab-row{display:flex;gap:0;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden;margin-bottom:1.5rem}
+.tab-btn{flex:1;padding:10px 6px;font-size:12px;font-weight:500;background:transparent;border:none;color:var(--color-text-secondary);cursor:pointer;transition:all .15s;border-right:0.5px solid var(--color-border-tertiary);text-align:center}
+.tab-btn:last-child{border-right:none}
+.tab-btn.on{background:var(--color-background-secondary);color:var(--color-text-primary)}
+
+.panel{display:none}.panel.show{display:block}
+
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden;margin-bottom:12px}
+.card-head{padding:1rem 1.25rem;border-bottom:0.5px solid var(--color-border-tertiary);display:flex;align-items:center;gap:10px}
+.card-icon{width:32px;height:32px;border-radius:var(--border-radius-md);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.card-title{font-size:14px;font-weight:500;color:var(--color-text-primary)}
+.card-sub{font-size:11px;color:var(--color-text-secondary);margin-top:2px}
+.card-body{padding:1rem 1.25rem}
+
+.phone-frame{width:260px;margin:0 auto;background:var(--color-background-secondary);border-radius:24px;border:0.5px solid var(--color-border-secondary);overflow:hidden}
+.phone-status{height:32px;background:var(--color-background-secondary);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--color-text-tertiary);border-bottom:0.5px solid var(--color-border-tertiary)}
+.phone-header{padding:10px 14px;background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);display:flex;align-items:center;gap:8px}
+.phone-body{padding:10px 14px;background:var(--color-background-tertiary)}
+
+.feed-card{background:var(--color-background-primary);border-radius:var(--border-radius-lg);border:0.5px solid var(--color-border-tertiary);padding:12px;margin-bottom:8px}
+.feed-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;flex-shrink:0}
+.feed-meta{font-size:10px;color:var(--color-text-tertiary)}
+.feed-name{font-size:12px;font-weight:500;color:var(--color-text-primary)}
+.feed-role{font-size:10px;color:var(--color-text-secondary)}
+.feed-msg{font-size:11px;color:var(--color-text-primary);line-height:1.6;margin:8px 0}
+.feed-tag{display:inline-block;font-size:9px;padding:2px 7px;border-radius:999px;margin-bottom:6px}
+.feed-actions{display:flex;gap:12px;margin-top:8px;padding-top:8px;border-top:0.5px solid var(--color-border-tertiary)}
+.feed-action-btn{font-size:10px;color:var(--color-text-secondary);display:flex;align-items:center;gap:3px;cursor:pointer}
+.feed-action-btn.active{color:#185FA5}
+.feed-relay-badge{display:flex;align-items:center;gap:6px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:6px 8px;margin-top:6px;font-size:10px;color:var(--color-text-secondary)}
+
+.relay-flow{display:flex;align-items:flex-start;gap:0;overflow-x:auto;padding-bottom:8px;margin-bottom:12px}
+.relay-node{flex-shrink:0;display:flex;flex-direction:column;align-items:center;width:72px}
+.relay-avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500;border:2px solid transparent;position:relative}
+.relay-avatar.done{border-color:#185FA5}
+.relay-avatar.active{border-color:#B45309;animation:pulse 1.5s infinite}
+.relay-avatar.pending{opacity:.4;border-color:var(--color-border-tertiary)}
+.relay-check{position:absolute;bottom:-2px;right:-2px;width:14px;height:14px;border-radius:50%;background:#185FA5;color:#fff;font-size:8px;display:flex;align-items:center;justify-content:center}
+.relay-name{font-size:9px;color:var(--color-text-secondary);margin-top:4px;text-align:center}
+.relay-status{font-size:8px;font-weight:500;margin-top:2px}
+.relay-arrow{display:flex;align-items:center;padding:0 2px;padding-bottom:16px;color:var(--color-text-tertiary);font-size:12px;flex-shrink:0}
+
+.rule-row{display:flex;gap:10px;padding:10px 0;border-bottom:0.5px solid var(--color-border-tertiary);align-items:flex-start}
+.rule-row:last-child{border-bottom:none}
+.rule-num{width:22px;height:22px;border-radius:50%;background:var(--color-background-secondary);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;color:var(--color-text-secondary);flex-shrink:0;margin-top:1px}
+.rule-body{flex:1}
+.rule-title{font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:3px}
+.rule-desc{font-size:11px;color:var(--color-text-secondary);line-height:1.6}
+
+.notif-item{display:flex;gap:10px;padding:10px 12px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);margin-bottom:6px;align-items:flex-start}
+.notif-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.notif-text{font-size:12px;color:var(--color-text-primary);line-height:1.5}
+.notif-time{font-size:10px;color:var(--color-text-tertiary);margin-top:2px}
+
+.comment-block{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px;margin-top:6px}
+.comment-item{display:flex;gap:8px;margin-bottom:8px}
+.comment-item:last-child{margin-bottom:0}
+.comment-avatar{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:500;flex-shrink:0}
+.comment-bubble{flex:1;background:var(--color-background-primary);border-radius:var(--border-radius-md);padding:7px 10px}
+.comment-name{font-size:9px;font-weight:500;color:var(--color-text-primary)}
+.comment-text{font-size:10px;color:var(--color-text-secondary);margin-top:2px;line-height:1.5}
+
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(180,83,9,.3)}50%{box-shadow:0 0 0 4px rgba(180,83,9,0)}}
+</style>
+
+<div class="wrap">
+<h2 class="sr-only">소셜 피드 방식의 메시지 릴레이 시스템 상세 설계</h2>
+
+<div class="tab-row">
+  <button class="tab-btn on" onclick="go(0)">피드 UI 목업</button>
+  <button class="tab-btn" onclick="go(1)">릴레이 순서 설계</button>
+  <button class="tab-btn" onclick="go(2)">운영 규칙</button>
+  <button class="tab-btn" onclick="go(3)">알림 설계</button>
+</div>
+
+<div id="p0" class="panel show">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start">
+
+    <div>
+      <div class="sec-label" style="margin-bottom:8px">그룹웨어 피드 화면</div>
+      <div class="phone-frame">
+        <div class="phone-status">High-5 · 소통&인정 3주차</div>
+        <div class="phone-header">
+          <div style="flex:1;font-size:12px;font-weight:500;color:var(--color-text-primary)">우리 팀 메시지 피드</div>
+          <div style="font-size:10px;color:var(--color-text-secondary)">11/14명 완료</div>
+        </div>
+        <div class="phone-body">
+
+          <div class="feed-card">
+            <div style="display:flex;align-items:center;gap:7px;margin-bottom:6px">
+              <div class="feed-avatar" style="background:#E6F1FB;color:#0C447C">김</div>
+              <div><div class="feed-name">김본부장</div><div class="feed-role">본부장 · 리더 메시지</div></div>
+              <div class="feed-meta" style="margin-left:auto">3일 전</div>
+            </div>
+            <div class="feed-tag" style="background:#E6F1FB;color:#0C447C">리더 메시지</div>
+            <div class="feed-msg">"결과 중심의 소통보다는 서로의 노력과 기여를 인정하며 어떤 상황에서도 끈끈함을 유지하는 것이 기본입니다."</div>
+            <div class="feed-actions">
+              <div class="feed-action-btn active">❤️ 24</div>
+              <div class="feed-action-btn">💬 8</div>
+              <div class="feed-action-btn">🔖 저장</div>
+            </div>
+          </div>
+
+          <div class="feed-card" style="border-color:#185FA533">
+            <div style="display:flex;align-items:center;gap:7px;margin-bottom:6px">
+              <div class="feed-avatar" style="background:#ECFDF5;color:#085041">이</div>
+              <div><div class="feed-name">이서연</div><div class="feed-role">팀원 · 오늘 작성</div></div>
+              <div class="feed-meta" style="margin-left:auto">2시간 전</div>
+            </div>
+            <div class="feed-tag" style="background:#ECFDF5;color:#085041">NEW</div>
+            <div class="feed-msg">"막히는 업무가 있을 때 혼자 끙끙대지 않고 팀원에게 먼저 물어보는 용기를 내겠습니다."</div>
+            <div class="feed-relay-badge">
+              <span>👣</span>
+              <span>다음 배턴 → <strong>박도현</strong>님에게 전달</span>
+            </div>
+            <div class="feed-actions">
+              <div class="feed-action-btn">❤️ 7</div>
+              <div class="feed-action-btn">💬 2</div>
+              <div class="feed-action-btn">🔖 저장</div>
+            </div>
+          </div>
+
+          <div class="feed-card" style="border-style:dashed;opacity:.7">
+            <div style="display:flex;align-items:center;gap:7px">
+              <div class="feed-avatar" style="background:#FAEEDA;color:#633806">박</div>
+              <div><div class="feed-name">박도현</div><div class="feed-role">팀원 · 작성 대기 중</div></div>
+            </div>
+            <div style="margin-top:8px;padding:10px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);font-size:11px;color:var(--color-text-tertiary);text-align:center">배턴을 기다리는 중 · 오늘 마감</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="sec-label" style="margin-bottom:8px">피드 상세 · 댓글 화면</div>
+      <div class="phone-frame">
+        <div class="phone-status">메시지 상세</div>
+        <div class="phone-header">
+          <div style="font-size:12px;font-weight:500;color:var(--color-text-primary)">← 이서연님 메시지</div>
+        </div>
+        <div class="phone-body">
+
+          <div class="feed-card">
+            <div style="display:flex;align-items:center;gap:7px;margin-bottom:8px">
+              <div class="feed-avatar" style="background:#ECFDF5;color:#085041">이</div>
+              <div><div class="feed-name">이서연</div><div class="feed-role">팀원</div></div>
+            </div>
+            <div class="feed-msg" style="font-size:12px">"막히는 업무가 있을 때 혼자 끙끙대지 않고 팀원에게 먼저 물어보는 용기를 내겠습니다."</div>
+            <div style="display:flex;gap:8px;margin-top:8px">
+              <div style="text-align:center;flex:1;padding:8px;background:var(--color-background-secondary);border-radius:var(--border-radius-md)">
+                <div style="font-size:16px;font-weight:500;color:var(--color-text-primary)">7</div>
+                <div style="font-size:9px;color:var(--color-text-tertiary)">공감</div>
+              </div>
+              <div style="text-align:center;flex:1;padding:8px;background:var(--color-background-secondary);border-radius:var(--border-radius-md)">
+                <div style="font-size:16px;font-weight:500;color:var(--color-text-primary)">2</div>
+                <div style="font-size:9px;color:var(--color-text-tertiary)">댓글</div>
+              </div>
+              <div style="text-align:center;flex:1;padding:8px;background:var(--color-background-secondary);border-radius:var(--border-radius-md)">
+                <div style="font-size:16px;font-weight:500;color:#185FA5">+30P</div>
+                <div style="font-size:9px;color:var(--color-text-tertiary)">획득 예정</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="font-size:11px;font-weight:500;color:var(--color-text-secondary);margin-bottom:6px">댓글 2개</div>
+          <div class="comment-block">
+            <div class="comment-item">
+              <div class="comment-avatar" style="background:#E6F1FB;color:#0C447C">김</div>
+              <div class="comment-bubble">
+                <div class="comment-name">김민준</div>
+                <div class="comment-text">저도 같은 고민을 했어요! 함께 실천해봐요 ☺️</div>
+              </div>
+            </div>
+            <div class="comment-item">
+              <div class="comment-avatar" style="background:#F5F3FF;color:#4C1D95">최</div>
+              <div class="comment-bubble">
+                <div class="comment-name">최지우</div>
+                <div class="comment-text">이 메시지 너무 공감돼요. 저도 이번 달 목표로 삼을게요!</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top:8px;display:flex;gap:6px">
+            <div style="flex:1;padding:8px 10px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);font-size:11px;color:var(--color-text-tertiary)">댓글을 남겨보세요...</div>
+            <div style="padding:8px 12px;background:#185FA5;border-radius:var(--border-radius-md);font-size:11px;color:#fff;cursor:pointer">전송</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="p1" class="panel">
+  <div class="card">
+    <div class="card-head">
+      <div class="card-icon" style="background:#FAEEDA;font-size:16px">🔗</div>
+      <div><div class="card-title">릴레이 순서 배턴 시스템</div><div class="card-sub">리더 → 팀원 순서대로, 매일 다음 사람에게 배턴 전달</div></div>
+    </div>
+    <div class="card-body">
+      <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:12px">예시: 14명 팀 기준 · 소통&인정 3주차 (Day 11~24)</div>
+      <div class="relay-flow">
+        <div class="relay-node">
+          <div class="relay-avatar done" style="background:#E6F1FB;color:#0C447C">
+            김<div class="relay-check">✓</div>
+          </div>
+          <div class="relay-name">김본부장</div>
+          <div class="relay-status" style="color:#0F6E56">완료</div>
+        </div>
+        <div class="relay-arrow">›</div>
+        <div class="relay-node">
+          <div class="relay-avatar done" style="background:#ECFDF5;color:#085041">
+            이<div class="relay-check">✓</div>
+          </div>
+          <div class="relay-name">이팀장</div>
+          <div class="relay-status" style="color:#0F6E56">완료</div>
+        </div>
+        <div class="relay-arrow">›</div>
+        <div class="relay-node">
+          <div class="relay-avatar done" style="background:#F5F3FF;color:#4C1D95">
+            최<div class="relay-check">✓</div>
+          </div>
+          <div class="relay-name">최지우</div>
+          <div class="relay-status" style="color:#0F6E56">완료</div>
+        </div>
+        <div class="relay-arrow">›</div>
+        <div class="relay-node">
+          <div class="relay-avatar active" style="background:#FAEEDA;color:#633806">박</div>
+          <div class="relay-name">박도현</div>
+          <div class="relay-status" style="color:#B45309">진행 중</div>
+        </div>
+        <div class="relay-arrow">›</div>
+        <div class="relay-node">
+          <div class="relay-avatar pending" style="background:var(--color-background-secondary);color:var(--color-text-tertiary)">김</div>
+          <div class="relay-name">김민준</div>
+          <div class="relay-status" style="color:var(--color-text-tertiary)">대기</div>
+        </div>
+        <div class="relay-arrow">›</div>
+        <div class="relay-node">
+          <div class="relay-avatar pending" style="background:var(--color-background-secondary);color:var(--color-text-tertiary)">한</div>
+          <div class="relay-name">한수진</div>
+          <div class="relay-status" style="color:var(--color-text-tertiary)">대기</div>
+        </div>
+        <div class="relay-arrow">›</div>
+        <div class="relay-node" style="opacity:.5">
+          <div class="relay-avatar" style="border-color:var(--color-border-tertiary);background:var(--color-background-secondary);color:var(--color-text-tertiary)">···</div>
+          <div class="relay-name">+8명</div>
+          <div class="relay-status" style="color:var(--color-text-tertiary)">대기</div>
+        </div>
+      </div>
+
+      <div class="rule-row">
+        <div class="rule-num">1</div>
+        <div class="rule-body">
+          <div class="rule-title">순서 결정 방식</div>
+          <div class="rule-desc">프로그램 시작 전 팀장이 순서를 한 번만 지정합니다. 이후 시스템이 자동으로 배턴을 넘기며, 팀원은 순서를 바꿀 수 없어 긴장감을 유지합니다.</div>
+        </div>
+      </div>
+      <div class="rule-row">
+        <div class="rule-num">2</div>
+        <div class="rule-body">
+          <div class="rule-title">배턴 유효 기간</div>
+          <div class="rule-desc">배턴을 받은 팀원은 48시간 내에 메시지를 작성해야 합니다. 48시간 경과 시 자동으로 다음 팀원에게 넘어가며, 미작성자에게는 별도 알림이 발송됩니다.</div>
+        </div>
+      </div>
+      <div class="rule-row">
+        <div class="rule-num">3</div>
+        <div class="rule-body">
+          <div class="rule-title">15명 초과 팀 처리</div>
+          <div class="rule-desc">15명을 초과하는 팀은 A·B 두 그룹으로 분리해 병렬 릴레이를 진행합니다. 양쪽 그룹 메시지가 모두 같은 팀 피드에 노출되어 전체 팀이 함께 읽습니다.</div>
+        </div>
+      </div>
+      <div class="rule-row">
+        <div class="rule-num">4</div>
+        <div class="rule-body">
+          <div class="rule-title">지각 작성 처리</div>
+          <div class="rule-desc">48시간 초과 후에도 마감일(릴레이 종료일) 이전까지는 작성이 가능합니다. 다만 지각 작성은 조기 완료 보너스 포인트(+20P)가 제외됩니다.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="p2" class="panel">
+  <div class="card">
+    <div class="card-head">
+      <div class="card-icon" style="background:#E1F5EE;font-size:16px">📜</div>
+      <div><div class="card-title">피드 운영 규칙</div><div class="card-sub">참여율과 콘텐츠 품질을 동시에 높이는 7가지 원칙</div></div>
+    </div>
+    <div class="card-body">
+      <div class="rule-row">
+        <div class="rule-num">1</div>
+        <div class="rule-body">
+          <div class="rule-title">메시지 길이 제한 — 100~200자</div>
+          <div class="rule-desc">너무 짧으면 성의 없어 보이고, 너무 길면 쓰기 부담스럽습니다. 100~200자 범위를 권장하며, 글자 수 게이지를 실시간으로 노출해 작성 가이드를 제공합니다.</div>
+        </div>
+      </div>
+      <div class="rule-row">
+        <div class="rule-num">2</div>
+        <div class="rule-body">
+          <div class="rule-title">팀 내 전체 공개 원칙</div>
+          <div class="rule-desc">작성된 메시지는 팀원 전원에게 즉시 공개됩니다. 비공개 옵션은 없으며, 공개 원칙이 진정성 있는 메시지 작성을 유도합니다. 단, 팀 외부(타 팀)에는 노출되지 않아 심리적 안전감을 보장합니다.</div>
+        </div>
+      </div>
+      <div class="rule-row">
+        <div class="rule-num">3</div>
+        <div class="rule-body">
+          <div class="rule-title">공감은 누구나, 댓글은 적극 권장</div>
+          <div class="rule-desc">공감(하트)은 제한 없이 누를 수 있으며, 댓글은 하루 최대 3회까지 포인트가 적립됩니다. 댓글을 통해 메시지를 읽었다는 신호를 주고, 팀 내 대화가 이어지도록 유도합니다.</div>
+        </div>
+      </div>
+      <div class="rule-row">
+        <div class="rule-num">4</div>
+        <div class="rule-body">
+          <div class="rule-title">리더 메시지는 항상 피드 상단 고정</div>
+          <div class="rule-desc">본부장·실장·팀장 메시지는 피드 최상단에 고정 노출됩니다. 팀원들이 리더 메시지를 기준으로 자신의 메시지 방향을 잡을 수 있도록 맥락을 항상 유지합니다.</div>
+        </div>
+      </div>
+      <div class="rule-row">
+        <div class="rule-num">5</div>
+        <div class="rule-body">
+          <div class="rule-title">전체 완료 시 모든 메시지 일괄 공개</div>
+          <div class="rule-desc">팀원 전원이 릴레이를 완료하면 전체 메시지가 한 피드에 모여 공개됩니다. '완성된 우리 팀 이야기'를 한눈에 볼 수 있어 팀 성취감을 극대화하고, 이후 투표 단계로 자연스럽게 연결됩니다.</div>
+        </div>
+      </div>
+      <div class="rule-row">
+        <div class="rule-num">6</div>
+        <div class="rule-body">
+          <div class="rule-title">수정은 24시간 이내만 허용</div>
+          <div class="rule-desc">작성 후 24시간 이내에는 메시지 수정이 가능합니다. 이후에는 수정이 잠기며, 다른 팀원이 이미 공감·댓글을 남긴 콘텐츠가 변경되지 않도록 일관성을 유지합니다.</div>
+        </div>
+      </div>
+      <div class="rule-row">
+        <div class="rule-num">7</div>
+        <div class="rule-body">
+          <div class="rule-title">부적절 메시지 신고 기능</div>
+          <div class="rule-desc">혹시 발생할 수 있는 부적절한 메시지는 팀원이 신고할 수 있으며, HR 담당자에게 자동 알림이 발송됩니다. 신고된 메시지는 검토 전까지 블러 처리됩니다.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="p3" class="panel">
+  <div class="card">
+    <div class="card-head">
+      <div class="card-icon" style="background:#FAEEDA;font-size:16px">🔔</div>
+      <div><div class="card-title">알림 설계 — 카카오톡 + 그룹웨어 푸시</div><div class="card-sub">적절한 시점에 적절한 알림으로 참여를 유도하고 이탈을 방지</div></div>
+    </div>
+    <div class="card-body">
+      <div style="font-size:11px;font-weight:500;color:var(--color-text-secondary);margin-bottom:8px">📬 자동 발송 알림 목록</div>
+      <div class="notif-item">
+        <div class="notif-dot" style="background:#185FA5"></div>
+        <div>
+          <div class="notif-text">[High-5] 🎉 박도현님, 배턴이 도착했습니다! 이서연님이 메시지를 남기고 당신을 지목했어요. 48시간 내 작성해주세요.</div>
+          <div class="notif-time">배턴 수령 즉시 · 카카오톡 + 그룹웨어 푸시</div>
+        </div>
+      </div>
+      <div class="notif-item">
+        <div class="notif-dot" style="background:#B45309"></div>
+        <div>
+          <div class="notif-text">[High-5] ⏰ 박도현님, 오늘 자정까지 작성하지 않으면 배턴이 자동으로 넘어갑니다. 지금 바로 참여해보세요!</div>
+          <div class="notif-time">마감 12시간 전 · 카카오톡</div>
+        </div>
+      </div>
+      <div class="notif-item">
+        <div class="notif-dot" style="background:#0F6E56"></div>
+        <div>
+          <div class="notif-text">[High-5] ❤️ 이서연님의 메시지에 공감이 10개 달성되었습니다! +30P가 적립되었어요.</div>
+          <div class="notif-time">공감 10개 달성 시 · 그룹웨어 푸시</div>
+        </div>
+      </div>
+      <div class="notif-item">
+        <div class="notif-dot" style="background:#7C3AED"></div>
+        <div>
+          <div class="notif-text">[High-5] 🏁 우리 팀 전원이 릴레이를 완료했습니다! 전체 메시지가 공개되었어요. 지금 확인하고 투표에 참여하세요.</div>
+          <div class="notif-time">팀 전원 완료 시 · 카카오톡 + 그룹웨어 전체 공지</div>
+        </div>
+      </div>
+      <div class="notif-item">
+        <div class="notif-dot" style="background:#5F5E5A"></div>
+        <div>
+          <div class="notif-text">[High-5] 📊 오늘의 전사 랭킹이 업데이트되었습니다. 우리 팀은 현재 전체 3위예요! 🎉</div>
+          <div class="notif-time">매일 오전 9시 · 그룹웨어 팀장에게 발송</div>
+        </div>
+      </div>
+
+      <div style="margin-top:12px;padding:12px;background:var(--color-background-secondary);border-radius:var(--border-radius-md)">
+        <div style="font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:6px">알림 피로도 방지 원칙</div>
+        <div style="font-size:11px;color:var(--color-text-secondary);line-height:1.7">
+          · 하루 최대 카카오톡 알림 2회 초과 금지<br>
+          · 오전 8시 ~ 오후 9시 사이에만 발송<br>
+          · 이미 완료한 팀원에게는 독려 알림 미발송<br>
+          · 알림 수신 거부 옵션 제공 (단, 거부 시 포인트 미적립 안내)
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+function go(i){
+  document.querySelectorAll('.tab-btn').forEach((b,j)=>b.classList.toggle('on',i===j));
+  document.querySelectorAll('.panel').forEach((p,j)=>p.classList.toggle('show',i===j));
+}
+</script>
